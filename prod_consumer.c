@@ -194,12 +194,12 @@ consumer()
 		{
 			msg = dequeue(q_hdl);
 			
-			printf("+-------------- Received message count %d -------------------+\n", i);
+			printf("\n+-------------- Received message count %d -------------------+\n", i);
 			printf("+sender	 :	%u \n", msg->senderid);
 			memset(buf, 0, sizeof(buf));
 			strncpy(buf, msg->msg, sizeof(buf));
 			printf("+Message :	%s\n", buf);
-			printf("+-------------- END------------------------------------------+\n");
+			printf("+-------------- END------------------------------------------+\n\n");
 
 			i++;
 		}
@@ -213,9 +213,19 @@ consumer()
 int
 main()
 {
-
+	pthread_t	tid=0;
+	int			ret = 0;
 	q_hdl = queue_init(3);
-	producer();
+
+	ret = pthread_create(&tid, NULL, &producer, NULL);
+	if(ret != 0)
+	{
+		perror("pthread_create");
+	}
+	else
+		printf("pthread %d created successfully for producer\n", tid);
+
+	sleep(5);	
 	consumer();
 
 
